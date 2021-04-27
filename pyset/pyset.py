@@ -70,8 +70,17 @@ class PySet:
         """compute the complement(not in) of 2 csvs"""
         self.csvs = self.read_csv_list()
         csv0 = self.csvs[0]
+        csv1 = self.csvs[1]
+
+        result = self._complement(csv0, csv1)
+        return self._make_result(result, self.full_output)
+
+    def subtract(self):
+        """compute the difference of 2 csvs (first minus second minus third ...)"""
+        self.csvs = self.read_csv_list()
+        csv0 = self.csvs[0]
         for csv1 in self.csvs[1:]:
-            csv0 = self._complement(csv0, csv1)
+            csv0 = self._subtract(csv0, csv1)
         return self._make_result(csv0, self.full_output)
 
     def dedupe(self):
@@ -85,6 +94,14 @@ class PySet:
     @staticmethod
     def _complement(csv0, csv1):
         """compute complement of 2 csvs"""
+        not_csv1 = {key: row for key, row in csv0.items() if row not in csv1.values()}
+        not_csv0 = {key: row for key, row in csv1.items() if row not in csv0.values()}
+
+        return {**not_csv1, **not_csv0}
+
+    @staticmethod
+    def _subtract(csv0, csv1):
+        """compute difference of 2 csvs"""
         return {key: row for key, row in csv0.items() if row not in csv1.values()}
 
     @staticmethod
@@ -150,7 +167,17 @@ def main(args):
     if args.operation == "union":
         result = pyset.union()
     elif args.operation == "complement":
-        result = pyset.complement()
+        if len(args.csvs) != 2:
+            print("exactly two csvs required for complement operation")
+            result = []
+        else:
+            result = pyset.complement()
+    elif args.operation == "subtract":
+        if len(args.csvs) < 2:
+            print("at least two csvs required for subtract operation")
+            result = []
+        else:
+            result = pyset.subtract()
     elif args.operation == "dedupe":
         if len(args.csvs) > 1:
             print("more than one csv, use union instead")

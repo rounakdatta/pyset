@@ -43,7 +43,17 @@ def main():
     if args.operation == "union":
         result = pyset.union()
     elif args.operation == "complement":
-        result = pyset.complement()
+        if len(args.csvs) != 2:
+            print("exactly two csvs required for complement operation")
+            result = []
+        else:
+            result = pyset.complement()
+    elif args.operation == "subtract":
+        if len(args.csvs) < 2:
+            print("at least two csvs required for subtract operation")
+            result = []
+        else:
+            result = pyset.subtract()
     elif args.operation == "dedupe":
         if len(args.csvs) > 1:
             print("more than one csv, use union instead")

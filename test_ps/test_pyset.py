@@ -1,6 +1,6 @@
 import unittest
 from pyset.pyset import PySet
-from test_ps.data.get_data import get_simple_csv, get_simple_csv2, get_simple_csv3
+from test_ps.data.get_data import get_simple_csv, get_simple_csv2, get_simple_csv3, get_simple_csv4, get_simple_csv5
 
 
 class TestPySet(unittest.TestCase):
@@ -96,20 +96,29 @@ class TestPySet(unittest.TestCase):
                           ('G', 'H', 'I'), ('J', 'K', 'L'), ('B', 'A', 'C'),
                           ('1', '2', '3'), ('4', '5', '6')], un)
 
-    def test_complement(self):
+    def test_subtract(self):
         data_path = get_simple_csv()
         data_path2 = get_simple_csv2()
         self.pytest.add_csv(data_path)
         self.pytest.add_csv(data_path2)
-        com = self.pytest.complement()
-        self.assertEqual(len(com), 3)
+        sub = self.pytest.subtract()
+        self.assertEqual(len(sub), 3)
 
-    def test_complement_no_results(self):
+    def test_complement(self):
+        data_path = get_simple_csv4()
+        data_path2 = get_simple_csv5()
+        self.pytest.add_csv(data_path)
+        self.pytest.add_csv(data_path2)
+        com = self.pytest.complement()
+        self.assertEqual(len(com), 2)
+        self.assertEqual(com, [("7", "8", "9"), ("X", "Y", "Z")])
+
+    def test_subtract_no_results(self):
         data_path = get_simple_csv()
         self.pytest.add_csv(data_path)
         self.pytest.add_csv(data_path)
-        com = self.pytest.complement()
-        self.assertEqual(len(com), 0)
+        sub = self.pytest.subtract()
+        self.assertEqual(len(sub), 0)
 
     def test_intersection_full_output(self):
         data_path = get_simple_csv()
@@ -127,9 +136,9 @@ class TestPySet(unittest.TestCase):
         self.pytest.add_csv(data_path, [1, 3])
         self.pytest.add_csv(data_path2, [2, 3])
         self.pytest.set_primary(2)
-        complement = self.pytest.complement()
-        self.assertEqual(len(complement), 3)
-        self.assertEqual(complement, [('2', '3'), ('K', 'L'), ('5', '6')])
+        subtract = self.pytest.subtract()
+        self.assertEqual(len(subtract), 3)
+        self.assertEqual(subtract, [('2', '3'), ('K', 'L'), ('5', '6')])
 
     def test_set_primary_full(self):
         data_path = get_simple_csv()
@@ -138,8 +147,8 @@ class TestPySet(unittest.TestCase):
         self.pytest.add_csv(data_path2, [2, 3])
         self.pytest.set_primary(2)
         self.pytest.set_full_output(True)
-        complement = self.pytest.complement()
-        self.assertEqual(len(complement), 3)
-        self.assertEqual(complement, [('1', '2', '3'), ('J', 'K', 'L'), ('4', '5', '6')])
+        subtract = self.pytest.subtract()
+        self.assertEqual(len(subtract), 3)
+        self.assertEqual(subtract, [('1', '2', '3'), ('J', 'K', 'L'), ('4', '5', '6')])
         """
         """
